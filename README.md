@@ -15,7 +15,7 @@ npm i @types/express -D
 Mongoose
 ```
 npm i mongoose
-npm i @types/mongoose
+npm i @types/mongoose -D
 ```
 Nodemon
 ```
