@@ -6,6 +6,7 @@ export interface IUser {
   email: string;
   password: string;
   phone: string;
+  packets: ObjectId[];
 }
 
 const userSchema = new Schema<IUser>({
@@ -13,6 +14,7 @@ const userSchema = new Schema<IUser>({
   email: {type: String, required: true},
   password: {type: String, required: true},
   phone: {type: String, required: true},
+  packets: [{type: Schema.Types.ObjectId, ref: "Packet"}],
 });
 
 export const UserModel = model("User", userSchema);

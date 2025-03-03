@@ -17,9 +17,9 @@ const options = {
         ],
         components: {
             schemas: {
-                Subject: {
+                Packet: {
                     type: 'object',
-                    required: ['name', 'description', 'teacher', 'difficulty'],
+                    required: ['name', 'description', 'status'],
                     properties: {
                         name: {
                             type: 'string',
@@ -27,10 +27,7 @@ const options = {
                         description: {
                             type: 'string',
                         },
-                        teacher: {
-                            type: 'string',
-                        },
-                        difficulty: {
+                        status: {
                             type: 'string',
                         },
                     },
@@ -51,6 +48,12 @@ const options = {
                         phone: {
                             type: 'string',
                         },
+                        packets: {
+                            type: 'array',
+                            items: {
+                                type: 'string',
+                            },
+                        },
                     },
                 },
             },
@@ -58,7 +61,6 @@ const options = {
     },
     apis: ['./src/routes/*.ts', './src/controllers/*.ts'], // Archivos donde están definidos los endpoints
 };
-
 const swaggerSpec = swaggerJSDoc(options);
 
 export function setupSwagger(app: Application): void {
