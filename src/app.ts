@@ -19,6 +19,7 @@ app.use('/api/packets', packetRoutes);
 
 app.listen(app.get('port'), () => {
     console.log(`Server running on port ${app.get('port')}`);
+    console.log(`Swagger disponible a http://localhost:${app.get('port')}/api-docs`);
 });
 
 export default app;

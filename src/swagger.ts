@@ -34,7 +34,7 @@ const options = {
                 },
                 User: {
                     type: 'object',
-                    required: ['name', 'email', 'password', 'phone'],
+                    required: ['name', 'email', 'password', 'phone', 'available', 'packets'],
                     properties: {
                         name: {
                             type: 'string',
@@ -48,6 +48,9 @@ const options = {
                         phone: {
                             type: 'string',
                         },
+                        available: {
+                            type: 'boolean',
+                        },
                         packets: {
                             type: 'array',
                             items: {
@@ -59,7 +62,7 @@ const options = {
             },
         },
     },
-    apis: ['./src/routes/*.ts', './src/controllers/*.ts'], // Archivos donde están definidos los endpoints
+    apis: ['./src/routes/*.ts', './src/controllers/*.ts'],
 };
 const swaggerSpec = swaggerJSDoc(options);
 

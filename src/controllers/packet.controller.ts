@@ -56,8 +56,11 @@ export async function postPacket(req: Request, res: Response): Promise<void> {
  */
 export async function getAllPackets(req: Request, res: Response): Promise<void> {
     try {
-        const packets = await packetService.getAllPackets();
-        res.status(200).json(packets);
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = parseInt(req.query.limit as string) || 10;
+        
+        const packetsPaginated = await packetService.getAllPackets(page, limit);
+        res.status(200).json(packetsPaginated);
     } catch (error) {
         res.status(400).json({ message: "Error getting packets", error });
     }

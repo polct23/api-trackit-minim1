@@ -26,7 +26,6 @@ const userService = new UserService();
  *       400:
  *         description: Error creating user
  */
-
 export async function postUser(req: Request, res: Response): Promise<void> {
     try {
         const user = req.body as IUser;
@@ -55,15 +54,19 @@ export async function postUser(req: Request, res: Response): Promise<void> {
  *       400:
  *         description: Error getting users
  */
-
 export async function getAllUsers(req: Request, res: Response): Promise<void> {
     try {
-        const users = await userService.getallUsers();
-        res.status(200).json(users);
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = parseInt(req.query.limit as string) || 10;
+
+        const usersPaginated = await userService.getAllUsers(page, limit);
+        
+        res.status(200).json(usersPaginated);
     } catch (error) {
         res.status(400).json({ message: "Error getting users", error });
     }
 }
+
 
 /**
  * @swagger
@@ -142,7 +145,7 @@ export async function updateUserById(req: Request, res: Response): Promise<void>
  * @swagger
  * /api/users/{id}:
  *   delete:
- *     summary: Delete a user by ID
+ *     summary: Deactivate a user by ID
  *     tags: [Users]
  *     parameters:
  *       - in: path
@@ -153,20 +156,20 @@ export async function updateUserById(req: Request, res: Response): Promise<void>
  *         description: The user ID
  *     responses:
  *       200:
- *         description: The deleted user
+ *         description: The deactivated user
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/User'
  *       400:
- *         description: Error deleting user
+ *         description: Error deactivating user
  */
-export async function deleteUserById(req: Request, res: Response): Promise<void> {
+export async function deactivateUserById(req: Request, res: Response): Promise<void> {
     try {
         const id = req.params.id;
-        const deletedUser = await userService.deleteUserById(id);
-        res.status(200).json(deletedUser);
+        const deactivatedUser = await userService.deactivateUserById(id);
+        res.status(200).json(deactivatedUser);
     } catch (error) {
-        res.status(400).json({ message: "Error deleting user", error });
+        res.status(400).json({ message: "Error deactivating user", error });
     }
 }
