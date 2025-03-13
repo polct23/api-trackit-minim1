@@ -141,6 +141,16 @@ export async function updateUserById(req: Request, res: Response): Promise<void>
     }
 }
 
+export async function deleteUserById(req: Request, res: Response): Promise<void> {
+    try {
+        const id = req.params.id;
+        const deletedUser = await userService.deleteUserById(id);
+        res.status(200).json(deletedUser);
+    } catch (error) {
+        res.status(400).json({ message: "Error deleting user", error });   
+    }
+}
+
 /**
  * @swagger
  * /api/users/{id}:
