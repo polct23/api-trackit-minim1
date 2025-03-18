@@ -19,6 +19,12 @@ const userSchema = new Schema<IUser>({
   email: {
     type: String,
     required: true,
+    validate: {
+      validator: function (value: string): boolean {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+      },
+      message: (props: any) => `${props.value} is not a valid email!`
+    }
   },
 
   password: {
@@ -28,7 +34,7 @@ const userSchema = new Schema<IUser>({
 
   phone: {
     type: String,
-     required: true
+    required: true
   },
 
   available: {
@@ -37,7 +43,7 @@ const userSchema = new Schema<IUser>({
     default: true
   },
   
-  packets: [{type: Schema.Types.ObjectId, ref: "Packet"}],
+  packets: [{ type: Schema.Types.ObjectId, ref: "Packet" }],
 });
 
 export const UserModel = model("User", userSchema);
