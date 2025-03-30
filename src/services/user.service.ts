@@ -16,7 +16,7 @@ export class UserService {
     
         const totalUsers = await UserModel.countDocuments({ available: true });
     
-        const users = await UserModel.find({ available: true }).skip(skip).limit(limit);
+        const users = await UserModel.find().skip(skip).limit(limit);
     
         return {
             totalUsers,
