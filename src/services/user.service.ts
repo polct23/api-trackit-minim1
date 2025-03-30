@@ -25,7 +25,6 @@ export class UserService {
             data: users,
         };
     }
-    
 
     async getUserById(id: string): Promise<IUser | null> {
         return await UserModel.findOne({ _id: id, available: true });
@@ -41,6 +40,28 @@ export class UserService {
 
     async deactivateUserById(id: string): Promise<IUser | null> {
         return await UserModel.findByIdAndUpdate(id, { available: false }, { new: true });
+    }
+
+    async getUserPacketsById(userId: string): Promise<IUser["packets"] | null> {
+        const user = await UserModel.findById(userId).populate("packets");
+        return user ? user.packets : null;
+    }
+
+    async addPacketToUser(userId: string, packetId: string): Promise<IUser | null> {
+        const user = await UserModel.findById(userId);
+        if (!user) {
+            throw new Error("User not found");
+        }
+
+        if (!user.packets.includes(packetId as any)) {
+            return await UserModel.findByIdAndUpdate(
+                userId,
+                { $push: { packets: packetId } },
+                { new: true, runValidators: false }
+            );
+        }
+
+        return user;
     }
 }
 

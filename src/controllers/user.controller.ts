@@ -183,3 +183,103 @@ export async function deactivateUserById(req: Request, res: Response): Promise<v
         res.status(400).json({ message: "Error deactivating user", error });
     }
 }
+/**
+ * @swagger
+ * /api/users/{id}/packets:
+ *   get:
+ *     summary: Get all packets of a user
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The user ID
+ *     responses:
+ *       200:
+ *         description: List of packets
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Packet'
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */
+export async function getUserPackets(req: Request, res: Response): Promise<void> {
+    try {
+        const userId = req.params.id;
+        const packets = await userService.getUserPacketsById(userId);
+
+        if (!packets) {
+            res.status(404).json({ message: "User not found or no packets available" });
+            return;
+        }
+
+        res.status(200).json(packets);
+    } catch (error) {
+        res.status(500).json({ message: "Error retrieving packets", error });
+    }
+}
+
+/**
+ * @swagger
+ * /api/users/{id}/packets:
+ *   post:
+ *     summary: Add a packet to a user
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The user ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               packetId:
+ *                 type: string
+ *                 description: The ID of the packet to add
+ *     responses:
+ *       200:
+ *         description: Packet added to user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       404:
+ *         description: User or packet not found
+ *       500:
+ *         description: Internal server error
+ */
+export async function addPacketToUser(req: Request, res: Response): Promise<void> {
+    try {
+        const userId = req.params.id;
+        const { packetId } = req.body;
+
+        if (!packetId) {
+            res.status(400).json({ message: "Packet ID is required" });
+            return;
+        }
+
+        const updatedUser = await userService.addPacketToUser(userId, packetId);
+
+        if (!updatedUser) {
+            res.status(404).json({ message: "User not found" });
+            return;
+        }
+
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        res.status(500).json({ message: "Error adding packet to user", error });
+    }
+}
