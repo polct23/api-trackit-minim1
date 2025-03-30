@@ -7,20 +7,20 @@ export class PacketService {
     }
 
     async getAllPackets(page: number, limit: number): Promise<{ 
-            totalUsers: number; 
+            totalPackets: number; 
             totalPages: number; 
             currentPage: number; 
             data: IPacket[]; 
         }> {
             const skip = (page - 1) * limit;
         
-            const totalUsers = await PacketModel.countDocuments();
+            const totalPackets = await PacketModel.countDocuments();
         
             const users = await PacketModel.find().skip(skip).limit(limit);
         
             return {
-                totalUsers,
-                totalPages: Math.ceil(totalUsers / limit),
+                totalPackets,
+                totalPages: Math.ceil(totalPackets / limit),
                 currentPage: page,
                 data: users,
             };
