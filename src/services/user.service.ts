@@ -30,6 +30,10 @@ export class UserService {
         return await UserModel.findOne({ _id: id, available: true });
     }
 
+    async getUserByName(name: string): Promise<IUser | null> {
+        return await UserModel.findOne({ name, available: true });
+    }
+
     async updateUserById(id: string, user: Partial<IUser>): Promise<IUser | null> {
         return await UserModel.findOneAndUpdate({ _id: id, available: true }, user, { new: true });
     }
@@ -47,15 +51,15 @@ export class UserService {
         return user ? user.packets : null;
     }
 
-    async addPacketToUser(userId: string, packetId: string): Promise<IUser | null> {
-        const user = await UserModel.findById(userId);
+    async addPacketToUser(userName: string, packetId: string): Promise<IUser | null> {
+        const user = await UserModel.findOne({ name: userName, available: true });
         if (!user) {
             throw new Error("User not found");
         }
 
         if (!user.packets.includes(packetId as any)) {
             return await UserModel.findByIdAndUpdate(
-                userId,
+                user._id,
                 { $push: { packets: packetId } },
                 { new: true, runValidators: false }
             );
@@ -63,6 +67,8 @@ export class UserService {
 
         return user;
     }
+
+
 }
 
 export default new UserService();

@@ -22,7 +22,7 @@ class UserService {
         return __awaiter(this, void 0, void 0, function* () {
             const skip = (page - 1) * limit;
             const totalUsers = yield user_1.UserModel.countDocuments({ available: true });
-            const users = yield user_1.UserModel.find({ available: true }).skip(skip).limit(limit);
+            const users = yield user_1.UserModel.find().skip(skip).limit(limit);
             return {
                 totalUsers,
                 totalPages: Math.ceil(totalUsers / limit),
@@ -34,6 +34,11 @@ class UserService {
     getUserById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield user_1.UserModel.findOne({ _id: id, available: true });
+        });
+    }
+    getUserByName(name) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield user_1.UserModel.findOne({ name, available: true });
         });
     }
     updateUserById(id, user) {
@@ -49,6 +54,24 @@ class UserService {
     deactivateUserById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield user_1.UserModel.findByIdAndUpdate(id, { available: false }, { new: true });
+        });
+    }
+    getUserPacketsById(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield user_1.UserModel.findById(userId).populate("packets");
+            return user ? user.packets : null;
+        });
+    }
+    addPacketToUser(userName, packetId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield user_1.UserModel.findOne({ name: userName, available: true });
+            if (!user) {
+                throw new Error("User not found");
+            }
+            if (!user.packets.includes(packetId)) {
+                return yield user_1.UserModel.findByIdAndUpdate(user._id, { $push: { packets: packetId } }, { new: true, runValidators: false });
+            }
+            return user;
         });
     }
 }

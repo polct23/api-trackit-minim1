@@ -103,6 +103,38 @@ export async function getUserById(req: Request, res: Response): Promise<void> {
 
 /**
  * @swagger
+ * /api/users/name/{name}:
+ *   get:
+ *     summary: Get a user by name
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: name
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The user name
+ *     responses:
+ *       200:
+ *         description: The user description by ID
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       400:
+ *         description: Error getting user
+ */
+export async function getUserByName(req: Request, res: Response): Promise<void> {
+    try {
+        const name = req.params.name;
+        const user = await userService.getUserByName(name);
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(400).json({ message: "Error getting user", error });
+    }
+}
+/**
+ * @swagger
  * /api/users/{id}:
  *   put:
  *     summary: Update a user by ID
@@ -228,17 +260,17 @@ export async function getUserPackets(req: Request, res: Response): Promise<void>
 
 /**
  * @swagger
- * /api/users/{id}/packets:
+ * /api/users/{name}/packets:
  *   post:
  *     summary: Add a packet to a user
  *     tags: [Users]
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: name
  *         schema:
  *           type: string
  *         required: true
- *         description: The user ID
+ *         description: The user name
  *     requestBody:
  *       required: true
  *       content:
@@ -263,7 +295,7 @@ export async function getUserPackets(req: Request, res: Response): Promise<void>
  */
 export async function addPacketToUser(req: Request, res: Response): Promise<void> {
     try {
-        const userId = req.params.id;
+        const userName = req.params.name;
         const { packetId } = req.body;
 
         if (!packetId) {
@@ -271,7 +303,7 @@ export async function addPacketToUser(req: Request, res: Response): Promise<void
             return;
         }
 
-        const updatedUser = await userService.addPacketToUser(userId, packetId);
+        const updatedUser = await userService.addPacketToUser(userName, packetId);
 
         if (!updatedUser) {
             res.status(404).json({ message: "User not found" });

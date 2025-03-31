@@ -10,16 +10,18 @@ import {
     updateUserById, 
     deactivateUserById, 
     getUserPackets, 
-    addPacketToUser 
+    addPacketToUser, 
+    getUserByName
 } from '../controllers/user.controller';
 
 router.get("/", getAllUsers);
 router.post("/", postUser);
 router.get('/:id', getUserById);
+router.get('/name/:name', getUserByName);
 router.put('/:id', updateUserById);
 router.delete('/:id', deleteUserById);
 router.put('/:id/deactivate', deactivateUserById);
 router.get('/:id/packets', getUserPackets);
-router.post('/:id/packets', addPacketToUser);
+router.post('/:name/packets', addPacketToUser);
 
 export default router;
