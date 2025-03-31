@@ -9,4 +9,6 @@ router.get('/:id', user_controller_1.getUserById);
 router.put('/:id', user_controller_1.updateUserById);
 router.delete('/:id', user_controller_1.deleteUserById);
 router.put('/:id/deactivate', user_controller_1.deactivateUserById);
+router.get('/:id/packets', user_controller_1.getUserPackets);
+router.post('/:id/packets', user_controller_1.addPacketToUser);
 exports.default = router;
