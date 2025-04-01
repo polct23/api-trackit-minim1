@@ -4,6 +4,7 @@ import { setupSwagger } from './swagger';
 import corsOptions from './middlewares/cors';
 import userRoutes from './routes/user.routes'; 
 import packetRoutes from './routes/packet.routes';
+import categoryRoutes from './routes/category.routes'; // Importar las rutas de categorías
 
 const app: express.Application = express();
 
@@ -18,6 +19,7 @@ setupSwagger(app);
 
 app.use('/api/users', userRoutes);
 app.use('/api/packets', packetRoutes);
+app.use('/api/categories', categoryRoutes); // Registrar las rutas de categorías
 
 app.listen(app.get('port'), () => {
     console.log(`Server running on port ${app.get('port')}`);

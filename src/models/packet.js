@@ -6,5 +6,6 @@ const packetSchema = new mongoose_1.Schema({
     name: { type: String, required: true },
     description: { type: String, required: true },
     status: { type: String, required: true },
+    categories: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "Category" }], // Relación
 });
 exports.PacketModel = (0, mongoose_1.model)("Packet", packetSchema);

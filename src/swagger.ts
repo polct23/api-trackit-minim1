@@ -59,6 +59,29 @@ const options = {
                         },
                     },
                 },
+                Category: {
+                    type: 'object',
+                    required: ['name', 'description', 'priority'],
+                    properties: {
+                        name: {
+                            type: 'string',
+                            example: 'fragil',
+                        },
+                        description: {
+                            type: 'string',
+                            example: 'Categoría para objetos frágiles',
+                        },
+                        isActive: {
+                            type: 'boolean',
+                            example: true,
+                        },
+                        priority: {
+                            type: 'integer',
+                            minimum: 0,
+                            example: 1,
+                        },
+                    },
+                },
             },
         },
     },

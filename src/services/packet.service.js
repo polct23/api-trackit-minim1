@@ -22,28 +22,54 @@ class PacketService {
         return __awaiter(this, void 0, void 0, function* () {
             const skip = (page - 1) * limit;
             const totalPackets = yield packet_1.PacketModel.countDocuments();
-            const users = yield packet_1.PacketModel.find().skip(skip).limit(limit);
+            const packets = yield packet_1.PacketModel.find().skip(skip).limit(limit);
             return {
                 totalPackets,
                 totalPages: Math.ceil(totalPackets / limit),
                 currentPage: page,
-                data: users,
+                data: packets,
             };
         });
     }
     getPacketById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield packet_1.PacketModel.findById(id);
+            return yield packet_1.PacketModel.findById(id).populate('categories');
         });
     }
     updatePacketById(id, packet) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield packet_1.PacketModel.findByIdAndUpdate(id, packet, { new: true });
+            return yield packet_1.PacketModel.findByIdAndUpdate(id, packet, { new: true }).populate('categories');
         });
     }
     deletePacketById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield packet_1.PacketModel.findByIdAndDelete(id);
+        });
+    }
+    addCategoryToPacket(packetId, categoryId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield packet_1.PacketModel.findByIdAndUpdate(packetId, { $addToSet: { categories: categoryId } }, { new: true }).populate('categories');
+        });
+    }
+    deleteCategoryFromPacket(packetId, categoryId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield packet_1.PacketModel.findByIdAndUpdate(packetId, { $pull: { categories: categoryId } }, { new: true }).populate('categories');
+        });
+    }
+    searchPacketsByCategory(categoryId, page, limit) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const skip = (page - 1) * limit;
+            const totalPackets = yield packet_1.PacketModel.countDocuments({ categories: categoryId });
+            const packets = yield packet_1.PacketModel.find({ categories: categoryId })
+                .skip(skip)
+                .limit(limit)
+                .populate('categories');
+            return {
+                totalPackets,
+                totalPages: Math.ceil(totalPackets / limit),
+                currentPage: page,
+                data: packets,
+            };
         });
     }
 }

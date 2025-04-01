@@ -8,4 +8,7 @@ router.get('/', packet_controller_1.getAllPackets);
 router.get('/:id', packet_controller_1.getPacketById);
 router.put('/:id', packet_controller_1.updatePacketById);
 router.delete('/:id', packet_controller_1.deletePacketById);
+router.post('/:id/categories/:categoryId', packet_controller_1.addCategoryToPacket);
+router.delete('/:id/categories/:categoryId', packet_controller_1.deleteCategoryFromPacket);
+router.get('/search/category/:categoryId', packet_controller_1.searchPacketsByCategory);
 exports.default = router;
